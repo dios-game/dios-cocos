@@ -8,8 +8,8 @@ if not exist proj.android md proj.android
 cd proj.android
 
 echo #####提示：开始构建#####
-cmake -DDXM_CMAKE_PLATFORM=ANDROID -P ..\CMakeListsAndroid.cmake
-rem cmake -DDXM_CMAKE_PLATFORM=ANDROID -P ..\CMakeListsAndroid.cmake
+cmake -DDIOS_CMAKE_PLATFORM=ANDROID -P ..\CMakeListsAndroid.cmake
+rem cmake -DDIOS_CMAKE_PLATFORM=ANDROID -P ..\CMakeListsAndroid.cmake
 echo #####提示：构建结束#####
 
 echo #####提示：开始编译#####

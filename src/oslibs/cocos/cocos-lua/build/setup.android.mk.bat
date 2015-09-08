@@ -13,8 +13,8 @@ if exist ..\..\..\..\config.bat call ..\..\..\..\config.bat
 if exist ..\..\..\..\..\config.bat call ..\..\..\..\..\config.bat
 
 echo ##### Ã· æ£∫¥Ú≤π∂° #####
-rem rmdir /s/Q %DXM_COCOS_PATH%\extensions\spine
-rem xcopy /y/s patch\* %DXM_COCOS_PATH%\
+rem rmdir /s/Q %DIOS_COCOS_PATH%\extensions\spine
+rem xcopy /y/s patch\* %DIOS_COCOS_PATH%\
 
 md proj.android\jni
 copy /y Android.mk proj.android\jni

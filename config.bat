@@ -22,7 +22,7 @@ rem -- DIOS 变量
 rem -------------------------------
 set DIOS_PROJECT_PATH=%~dp0
 set DIOS_PATH=%DIOS_PROJECT_PATH%\dios
-set DIOS_COCOS_PATH=%DXM_PROJECT_PATH%\src\oslibs\cocos\cocos-src
+set DIOS_COCOS_PATH=%DIOS_PROJECT_PATH%\src\oslibs\cocos\cocos-src
 
 rem -- 系统自动配置
 rem -------------------------------
