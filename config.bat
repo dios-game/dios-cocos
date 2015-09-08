@@ -21,7 +21,8 @@ rem -------------------------------
 rem -- DIOS 变量
 rem -------------------------------
 set DIOS_PROJECT_PATH=%~dp0
-set DIOS_PATH=%DIOS_PROJECT_PATH%\DIOS
+set DIOS_PATH=%DIOS_PROJECT_PATH%\dios
+set DIOS_COCOS_PATH=%DXM_PROJECT_PATH%\src\oslibs\cocos\cocos-src
 
 rem -- 系统自动配置
 rem -------------------------------
@@ -31,6 +32,7 @@ set ANDROID_TOOLS=%ANDROID_SDK_HOME%\tools
 set ANDROID_SDK_PLATFORM_TOOLS=%ANDROID_SDK_HOME%;%ANDROID_SDK_HOME%\platform-tools
 set ANDROID_SDK_TOOLS=%ANDROID_SDK_HOME%\tools
 set NDK_MODULE_PATH=%~dp0;%ANDROID_NDK_HOME%\sources\;
+set NDK_MODULE_PATH=%DIOS_COCOS_PATH%;%DIOS_COCOS_PATH%/external;%DIOS_COCOS_PATH%/cocos;%NDK_MODULE_PATH%
 set NDK_MODULE_PATH=%NDK_MODULE_PATH:\=/%
 set PATH=%PATH%;%JAVA_HOME%\bin;%ANTBIN%;%ANDROID_NDK_HOME%;%ANDROID_SDK_PLATFORM_TOOLS%;%ANDROID_SDK_TOOLS%;%DIOS_PATH%\build\tools\win
 set CLASSPATH=.;%JAVA_HOME%\lib
