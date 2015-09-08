@@ -1,0 +1,3 @@
+[submodule "dios"]
+	path = dios
+	url = https://github.com/dios-game/dios.git
