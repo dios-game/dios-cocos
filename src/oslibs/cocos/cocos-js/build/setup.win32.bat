@@ -15,7 +15,7 @@ if exist ..\..\..\..\..\..\config.bat call ..\..\..\..\..\..\config.bat
 if exist ..\..\..\..\..\..\..\config.bat call ..\..\..\..\..\..\..\config.bat
 
 echo ##### 提示：变量配置 #####
-SET cocos2dx_sln=%DIOS_COCOS_PATH%\build\cocos2d-js-win32.sln
+SET cocos2dx_sln=%DIOS_COCOS_PATH%\build\cocos2d-win32.sln
 SET DIOS_PREBUILT=%cd%\prebuilt
 SET DIOS_PLATFORM=win_x86
 	
