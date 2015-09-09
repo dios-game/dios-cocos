@@ -4,6 +4,8 @@ definitions:
   ifunction: "js_${generator.prefix}_${class_name}_${func_name}"
   sfunction: "js_${generator.prefix}_${class_name}_${func_name}"
   constructor: "js_${generator.prefix}_${class_name}_constructor"
+  ctor: "js_${generator.prefix}_${class_name}_ctor"
+  public_field: "js_${generator.prefix}_${class_name}"
 conversions:
   # some times you want to use a special native type when converting from spidermonkey to native
   # the most common case would be from JS-boolean to bool. Using "bool" will fail here since we
@@ -72,6 +74,10 @@ conversions:
     "Quaternion": "ok &= jsval_to_quaternion(cx, ${in_value}, &${out_value})"
     "Ray": "ok &= jsval_to_ray(cx, ${in_value}, &${out_value})"
     "NavMeshAgentParam": "ok &= jsval_to_NavMeshAgentParam(cx, ${in_value}, &${out_value})"
+    "Physics3DRigidBodyDes*": "cocos2d::Physics3DRigidBodyDes tempObj;${out_value}=&tempObj;ok &= jsval_to_physics3DRigidBodyDes(cx, ${in_value}, ${out_value})"
+    "TerrainData": "ok &= jsval_to_TerrainData(cx, ${in_value}, &${out_value})"
+    "TMXTileFlags_": "ok &= jsval_to_uint32(cx, ${in_value}, (uint32_t *)&${out_value})"
+    "TMXTileFlags_*": "uint32_t tempData;${out_value}=(cocos2d::TMXTileFlags_*)&tempData;ok &= jsval_to_uint32(cx, ${in_value}, (uint32_t *)&${out_value})"
     object: |
       do {
       ${($level + 1) * '    '}if (${in_value}.isNull()) { ${out_value} = nullptr; break; }
@@ -90,8 +96,9 @@ conversions:
     "unsigned short": "${out_value} = ushort_to_jsval(cx, ${in_value})"
     "unsigned char": "${out_value} = uint32_to_jsval(cx, ${in_value})"
     "long long": "${out_value} = long_long_to_jsval(cx, ${in_value})"
+    "@string\\s*&?": "${out_value} = std_string_to_jsval(cx, ${in_value})"
+    "@basic_string<char>\\s*&?": "${out_value} = std_string_to_jsval(cx, ${in_value})"
     "std::string": "${out_value} = std_string_to_jsval(cx, ${in_value})"
-    "basic_string<char>": "${out_value} = std_string_to_jsval(cx, ${in_value})"
     "char*": "${out_value} = c_string_to_jsval(cx, ${in_value})"
     bool: "${out_value} = BOOLEAN_TO_JSVAL(${in_value})"
     float: "${out_value} = DOUBLE_TO_JSVAL(${in_value})"
