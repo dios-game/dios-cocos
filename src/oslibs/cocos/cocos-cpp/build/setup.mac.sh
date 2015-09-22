@@ -23,7 +23,7 @@ source ${config_file}
 # ##### 提示：变量配置 #####
 cocos2dx_xcodeproj=${DIOS_COCOS_PATH}/build/cocos2d_libs.xcodeproj
 DIOS_PREBUILT=$(cd $(dirname $BASH_SOURCE); pwd)/prebuilt
-DIOS_PLATFORM=ios
+DIOS_PLATFORM=mac
 
 # ##### 提示：打补丁 #####
 # rmdir -p ${DIOS_COCOS_PATH}/extensions/spine
@@ -32,14 +32,14 @@ DIOS_PLATFORM=ios
 # ##### 提示：编译 Cocos #####
 cd ${DIOS_COCOS_PATH}
 
-xcodebuild -project ${cocos2dx_xcodeproj} -target "libcocos2d iOS" -configuration Debug
-xcodebuild -project ${cocos2dx_xcodeproj} -target "libcocos2d iOS" -configuration Release
+xcodebuild -project ${cocos2dx_xcodeproj} -target "libcocos2d Mac" -configuration Debug
+xcodebuild -project ${cocos2dx_xcodeproj} -target "libcocos2d Mac" -configuration Release
 
 # ##### 提示：安装 Cocos #####
 mkdir -p ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/debug
 mkdir -p ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/release
-cp -rf build/build/Debug-iphoneos/"libcocos2d iOS.a" ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/debug/libcocos2d.a
-cp -rf build/build/Release-iphoneos/"libcocos2d iOS.a" ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/release/libcocos2d.a
+cp -rf build/build/Debug/"libcocos2d Mac.a" ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/debug/libcocos2d.a
+cp -rf build/build/Release/"libcocos2d Mac.a" ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/release/libcocos2d.a
 
 mkdir -p ${DIOS_PREBUILT}/inc/cocos
 # cocos
@@ -55,14 +55,16 @@ find ./ -type f | grep -E "\.h$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
 # external
 cd ../external
 find ./ -type f | grep -E "\.h$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
+find ./ -type d -name "include" -exec cp -rf {}/ ${DIOS_PREBUILT}/inc/cocos/ \;
+find ./ -type d -name "mac" -exec cp -rf {}/ ${DIOS_PREBUILT}/inc/cocos/ \;
 
 cd ${ocd}
 cd ..
 
-if [ ! -d proj.ios ]; then
-	mkdir proj.ios;
+if [ ! -d proj.mac ]; then
+	mkdir proj.mac;
 fi
-cd proj.ios
+cd proj.mac
 
 function check()
 {
@@ -73,12 +75,11 @@ function check()
 }
 
 echo "#####提示：开始构建#####"
-cmake -GXcode -DDIOS_CMAKE_PLATFORM=IOS -DCMAKE_TOOLCHAIN_FILE=${DIOS_CMAKE}/toolchain/ios/ios.toolchain.cmake ..
+cmake -GXcode -DDIOS_CMAKE_PLATFORM=MAC -DCMAKE_TOOLCHAIN_FILE=${DIOS_CMAKE}/toolchain/mac/mac.toolchain.cmake ..
 check $?
-cmake -GXcode -DDIOS_CMAKE_PLATFORM=IOS -DCMAKE_TOOLCHAIN_FILE=${DIOS_CMAKE}/toolchain/ios/ios.toolchain.cmake ..
+cmake -GXcode -DDIOS_CMAKE_PLATFORM=MAC -DCMAKE_TOOLCHAIN_FILE=${DIOS_CMAKE}/toolchain/mac/mac.toolchain.cmake ..
 check $?
 echo "#####提示：构建结束#####"
-
 
 echo "#####提示：开始编译#####"
 xcodebuild -target ALL_BUILD -configuration Debug
