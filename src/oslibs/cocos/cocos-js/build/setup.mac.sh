@@ -22,8 +22,7 @@ source ${config_file}
 
 # ##### 提示：变量配置 #####
 cocos2dx_xcodeproj=${DIOS_COCOS_PATH}/build/cocos2d_libs.xcodeproj
-cocos2dx_lua_xcodeproj=${DIOS_COCOS_PATH}/cocos/scripting/lua-bindings/proj.ios_mac/cocos2d_lua_bindings.xcodeproj
-cocos2dx_simulator_xcodeproj=${DIOS_COCOS_PATH}/tools/simulator/libsimulator/proj.ios_mac/libsimulator.xcodeproj
+cocos2dx_js_xcodeproj=${DIOS_COCOS_PATH}/cocos/scripting/js-bindings/proj.ios_mac/cocos2d_js_bindings.xcodeproj
 DIOS_PREBUILT=$(cd $(dirname $BASH_SOURCE); pwd)/prebuilt
 DIOS_PLATFORM=mac
 
@@ -35,20 +34,16 @@ DIOS_PLATFORM=mac
 cd ${DIOS_COCOS_PATH}
 xcodebuild -project ${cocos2dx_xcodeproj} -target "libcocos2d Mac" -configuration Debug
 xcodebuild -project ${cocos2dx_xcodeproj} -target "libcocos2d Mac" -configuration Release
-xcodebuild -project ${cocos2dx_lua_xcodeproj} -target "libluacocos2d Mac" -configuration Debug
-xcodebuild -project ${cocos2dx_lua_xcodeproj} -target "libluacocos2d Mac" -configuration Release
-xcodebuild -project ${cocos2dx_simulator_xcodeproj} -target "libsimulator Mac" -configuration Debug
-xcodebuild -project ${cocos2dx_simulator_xcodeproj} -target "libsimulator Mac" -configuration Release
+xcodebuild -project ${cocos2dx_js_xcodeproj} -target "libjscocos2d Mac" -configuration Debug
+xcodebuild -project ${cocos2dx_js_xcodeproj} -target "libjscocos2d Mac" -configuration Release
 
 # ##### 提示：安装 Cocos #####
 mkdir -p ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/debug
 mkdir -p ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/release
 cp -rf build/build/Debug/"libcocos2d Mac.a" ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/debug/libcocos2d.a
 cp -rf build/build/Release/"libcocos2d Mac.a" ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/release/libcocos2d.a
-cp -rf ${DIOS_COCOS_PATH}/cocos/scripting/lua-bindings/proj.ios_mac/build/Debug/"libluacocos2d Mac.a" ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/debug/libluacocos2d.a
-cp -rf ${DIOS_COCOS_PATH}/cocos/scripting/lua-bindings/proj.ios_mac/build/Release/"libluacocos2d Mac.a" ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/release/libluacocos2d.a
-cp -rf ${DIOS_COCOS_PATH}/tools/simulator/libsimulator/proj.ios_mac/build/Debug/"libsimulator Mac.a" ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/debug/libsimulator.a
-cp -rf ${DIOS_COCOS_PATH}/tools/simulator/libsimulator/proj.ios_mac/build/Release/"libsimulator Mac.a" ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/release/libsimulator.a
+cp -rf ${DIOS_COCOS_PATH}/cocos/scripting/js-bindings/proj.ios_mac/build/Debug/"libjscocos2d Mac.a" ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/debug/libjscocos2d.a
+cp -rf ${DIOS_COCOS_PATH}/cocos/scripting/js-bindings/proj.ios_mac/build/Release/"libjscocos2d Mac.a" ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/release/libjscocos2d.a
 
 mkdir -p ${DIOS_PREBUILT}/inc/cocos
 # cocos
@@ -56,6 +51,8 @@ cd cocos
 find ./ -type f | grep -E "\.h$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
 find ./ -type f | grep -E "\.inl$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
 find ./ -type f -name "*.inl" -exec cp -rf {} ${DIOS_PREBUILT}/inc/cocos/ \;
+find ./ -type f -name "uthash.h" -exec cp -rf {} ${DIOS_PREBUILT}/inc/cocos/ \;
+cp -r editor-support/* ${DIOS_PREBUILT}/inc/cocos/
 
 # extensions
 cd ..
@@ -69,8 +66,8 @@ find ./ -type f | grep -E "\.h$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
 find ./ -type d -name "include" -exec cp -rf {}/ ${DIOS_PREBUILT}/inc/cocos/ \;
 find ./ -type d -name "mac" -exec cp -rf {}/ ${DIOS_PREBUILT}/inc/cocos/ \;
 
-# lua
-cd ../cocos/scripting/lua-bindings
+# js
+cd ../cocos/scripting/js-bindings
 cd auto
 find ./ -type f | grep -E "\.h$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
 find ./ -type f | grep -E "\.hpp$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
@@ -79,19 +76,10 @@ find ./ -type f | grep -E "\.h$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
 find ./ -type f | grep -E "\.hpp$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
 cd ${DIOS_COCOS_PATH}
 cp cocos/audio/include/*.h ${DIOS_PREBUILT}/inc/cocos/
-cd external/lua
-cd lua
+cd external/spidermonkey
 find ./ -type f | grep -E "\.h$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
-cp prebuilt/ios/liblua.a ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/debug/liblua.a
-cp prebuilt/ios/liblua.a ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/release/liblua.a
-cd ../tolua
-find ./ -type f | grep -E "\.h$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
-cd ../luajit/include
-find ./ -type f | grep -E "\.h$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
-
-# simulator
-cd ${DIOS_COCOS_PATH}/tools/simulator/libsimulator/lib
-find ./ -type f | grep -E "\.h$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
+cp prebuilt/mac/libjs_static.a ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/debug/libjs_static.a
+cp prebuilt/mac/libjs_static.a ${DIOS_PREBUILT}/lib/${DIOS_PLATFORM}/release/libjs_static.a
 
 cd ${ocd}
 cd ..

@@ -47,9 +47,12 @@ cd cocos
 find ./ -type f | grep -E "\.h$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
 find ./ -type f | grep -E "\.inl$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
 find ./ -type f -name "*.inl" -exec cp -rf {} ${DIOS_PREBUILT}/inc/cocos/ \;
+cp -r editor-support/* ${DIOS_PREBUILT}/inc/cocos/
 
 # extensions
-cd ../extensions
+cd ..
+cp -r extensions ${DIOS_PREBUILT}/inc/cocos/
+cd extensions
 find ./ -type f | grep -E "\.h$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
 
 # external
@@ -57,6 +60,7 @@ cd ../external
 find ./ -type f | grep -E "\.h$" | cpio -dump ${DIOS_PREBUILT}/inc/cocos/
 find ./ -type d -name "include" -exec cp -rf {}/ ${DIOS_PREBUILT}/inc/cocos/ \;
 find ./ -type d -name "mac" -exec cp -rf {}/ ${DIOS_PREBUILT}/inc/cocos/ \;
+cp -r chipmunk/include/chipmunk ${DIOS_PREBUILT}/inc/cocos/
 
 cd ${ocd}
 cd ..
