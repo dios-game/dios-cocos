@@ -81,7 +81,7 @@ MACRO(dios_config_find_module MODULE)
 
 	IF(DIOS_CMAKE_PLATFORM_WIN32)
 		dios_find_module(${MODULE} PACKAGE cocos COMPONENTS libluacocos2d libcocos2d libsimulator HEADERS cocos/cocos2d.h)
-		dios_find_module(${MODULE} PACKAGE external1 COMPONENTS websockets libzlib libwebp libiconv freetype250)	
+		dios_find_module(${MODULE} PACKAGE external1 COMPONENTS websockets libzlib libwebp libiconv freetype)	
 		dios_find_module(${MODULE} PACKAGE external2 COMPONENTS glew32 glfw3 libchipmunk libcurl_imp libSpine)	# 
 		dios_find_module(${MODULE} PACKAGE external3 COMPONENTS libpng libjpeg libtiff libbox2d lua51)	
 		dios_find_add_libraries(${MODULE} ws2_32 wsock32 winmm opengl32)

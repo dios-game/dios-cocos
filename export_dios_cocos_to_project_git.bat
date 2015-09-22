@@ -10,7 +10,7 @@ set /p val=-- 请输入工程git路径:
 cd /d %val%
 
 rem 创建子模块
-git submodule add https://github.com/dxmgame/dxm-cocos.git dxm-cocos
+git submodule add https://github.com/dios-game/dios-cocos.git dios-cocos
 if %errorlevel% neq 0 goto :cmEnd
 
 git submodule update --init --recursive

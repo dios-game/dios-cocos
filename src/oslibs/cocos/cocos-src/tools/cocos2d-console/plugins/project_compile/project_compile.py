@@ -89,6 +89,8 @@ class CCPluginCompile(cocos.CCPlugin):
                            help=MultiLanguage.get_string('COMPILE_ARG_CPPFLAGS'))
         group.add_argument("--android-studio", dest="use_studio", action="store_true",
                            help=MultiLanguage.get_string('COMPILE_ARG_STUDIO'))
+        group.add_argument("--no-apk", dest="no_apk", action="store_true",
+                           help=MultiLanguage.get_string('COMPILE_ARG_NO_APK'))
 
         group = parser.add_argument_group(MultiLanguage.get_string('COMPILE_ARG_GROUP_WIN'))
         group.add_argument("--vs", dest="vs_version", type=int,
@@ -129,19 +131,18 @@ class CCPluginCompile(cocos.CCPlugin):
                 "\n\t%%prog %s %s -p android" % (category, name, category, name)
 
     def _check_custom_options(self, args):
-
-        if args.mode != 'release':
-            args.mode = 'debug'
-
-        self._mode = 'debug'
-        if 'release' == args.mode:
-            self._mode = args.mode
+        # get the mode parameter
+        available_modes = [ 'release', 'debug' ]
+        self._mode = self.check_param(args.mode, 'debug', available_modes,
+                                      MultiLanguage.get_string('COMPILE_ERROR_WRONG_MODE_FMT',
+                                                               available_modes))
 
         # android arguments
-        if args.ndk_mode is not None:
-            self._ndk_mode = args.ndk_mode
-        else:
-            self._ndk_mode = self._mode
+        available_ndk_modes = [ 'release', 'debug', 'none' ]
+        self._ndk_mode = self.check_param(args.ndk_mode, self._mode, available_ndk_modes,
+                                          MultiLanguage.get_string('COMPILE_ERROR_WRONG_NDK_MODE_FMT',
+                                                                   available_ndk_modes))
+        self._no_apk = args.no_apk
 
         self.app_abi = None
         if args.app_abi:
@@ -197,6 +198,24 @@ class CCPluginCompile(cocos.CCPlugin):
 
         self.end_warning = ""
         self._gen_custom_step_args()
+
+    def check_param(self, value, default_value, available_values, error_msg, ignore_case=True):
+        if value is None:
+            return default_value
+
+        if ignore_case:
+            check_value = value.lower()
+            right_values = []
+            for v in available_values:
+                right_values.append(v.lower())
+        else:
+            check_value = value
+            right_values = available_values
+
+        if check_value in right_values:
+            return check_value
+        else:
+            raise cocos.CCPluginError(error_msg, cocos.CCPluginError.ERROR_WRONG_ARGS)
 
     def get_num_of_cpu(self):
         try:
@@ -512,8 +531,9 @@ class CCPluginCompile(cocos.CCPlugin):
                 self._project.invoke_custom_step_script(cocos_project.Project.CUSTOM_STEP_POST_NDK_BUILD, target_platform, args_ndk_copy)
 
         # build apk
-        cocos.Logging.info(MultiLanguage.get_string('COMPILE_INFO_BUILD_APK'))
-        self.apk_path = builder.do_build_apk(build_mode, output_dir, self._custom_step_args, self)
+        if not self._no_apk:
+            cocos.Logging.info(MultiLanguage.get_string('COMPILE_INFO_BUILD_APK'))
+        self.apk_path = builder.do_build_apk(build_mode, self._no_apk, output_dir, self._custom_step_args, self)
         self.android_package, self.android_activity = builder.get_apk_info()
 
         cocos.Logging.info(MultiLanguage.get_string('COMPILE_INFO_BUILD_SUCCEED'))
@@ -1274,8 +1294,9 @@ class CCPluginCompile(cocos.CCPlugin):
                 "sourceMapOpened" : True if self._has_sourcemap else False
                 }
 
-        if os.path.exists(publish_dir) == False:
-            os.makedirs(publish_dir)
+        if os.path.exists(publish_dir):
+            shutil.rmtree(publish_dir)
+        os.makedirs(publish_dir)
 
         # generate build.xml
         build_web.gen_buildxml(project_dir, project_json, publish_dir, buildOpt)
@@ -1333,11 +1354,15 @@ class CCPluginCompile(cocos.CCPlugin):
         indexHtmlOutputFile.close()
         
         # copy res dir
-        dst_dir = os.path.join(publish_dir, 'res')
-        src_dir = os.path.join(project_dir, 'res')
-        if os.path.exists(dst_dir):
-            shutil.rmtree(dst_dir)
-        shutil.copytree(src_dir, dst_dir)
+        if cfg_obj.copy_res is None:
+            dst_dir = os.path.join(publish_dir, 'res')
+            src_dir = os.path.join(project_dir, 'res')
+            if os.path.exists(dst_dir):
+                shutil.rmtree(dst_dir)
+            shutil.copytree(src_dir, dst_dir)
+        else:
+            for cfg in cfg_obj.copy_res:
+                cocos.copy_files_with_config(cfg, project_dir, publish_dir)
 
         # copy to the output directory if necessary
         pub_dir = os.path.normcase(publish_dir)
