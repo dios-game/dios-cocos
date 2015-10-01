@@ -16,7 +16,7 @@ if exist ..\..\..\..\..\..\..\config.bat call ..\..\..\..\..\..\..\config.bat
 echo ##### 提示：变量配置 #####
 SET cocos2dx_sln=%DIOS_COCOS_PATH%\build\cocos2d-win32.sln
 SET DIOS_PREBUILT=%cd%\prebuilt
-SET DIOS_PLATFORM=win_x86
+SET DIOS_PLATFORM=win32
 	
 echo ##### 提示：打补丁 #####
 rem rmdir /s/Q %DIOS_COCOS_PATH%\extensions\spine
