@@ -265,7 +265,7 @@ cc.Handler.EVENT_SPINE            = 52
 cc.Handler.EVENT_PHYSICS_CONTACT_BEGIN = 53
 cc.Handler.EVENT_PHYSICS_CONTACT_PRESOLVE = 54
 cc.Handler.EVENT_PHYSICS_CONTACT_POSTSOLVE = 55
-cc.Handler.EVENT_PHYSICS_CONTACT_SEPARATE = 56
+cc.Handler.EVENT_PHYSICS_CONTACT_SEPERATE = 56
 cc.Handler.EVENT_FOCUS = 57
 cc.Handler.EVENT_CONTROLLER_CONNECTED = 58
 cc.Handler.EVENT_CONTROLLER_DISCONNECTED = 59
@@ -497,7 +497,7 @@ cc.KeyCode.KEY_LEFT_ALT   = cc.KeyCode.KEY_ALT
 
 cc.EventAssetsManagerEx =
 {
-    EventCode = 
+    EventCode =
     {
         ERROR_NO_LOCAL_MANIFEST = 0,
         ERROR_DOWNLOAD_MANIFEST = 1,
@@ -583,7 +583,7 @@ cc.MATRIX_STACK_TYPE =
     TEXTURE = 2,
 }
 
-cc.LightType = 
+cc.LightType =
 {
     DIRECTIONAL = 0,
     POINT = 1,
@@ -591,7 +591,7 @@ cc.LightType =
     AMBIENT = 3,
 }
 
-cc.LightFlag = 
+cc.LightFlag =
 {
     LIGHT0  = math.pow(2,0),
     LIGHT1  = math.pow(2,1),
@@ -611,11 +611,13 @@ cc.LightFlag =
     LIGHT15 = math.pow(2,15),
 }
 
+cc.AsyncTaskPool = cc.AsyncTaskPool or {}
+
 cc.AsyncTaskPool.TaskType =
 {
     TASK_IO = 0,
     TASK_NETWORK = 1,
     TASK_OTHER = 2,
-    TASK_MAX_TYPE = 3,  
+    TASK_MAX_TYPE = 3,
 }
 
